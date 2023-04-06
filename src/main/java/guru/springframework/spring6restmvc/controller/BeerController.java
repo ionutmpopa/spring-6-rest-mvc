@@ -22,8 +22,16 @@ import java.util.UUID;
 public class BeerController {
     private final BeerService beerService;
 
-    @GetMapping
-    public List<Beer> listBeers(){
+    @PostMapping
+    //@RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity handlePost(@RequestBody Beer beer){
+
+        Beer savedBeer = beerService.saveNewBeer(beer);
+
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    @GetMapping    public List<Beer> listBeers(){
         return beerService.listBeers();
     }
 
