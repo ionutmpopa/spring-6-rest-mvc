@@ -22,23 +22,19 @@ public class BeerController {
     private final BeerService beerService;
 
     @PostMapping
-    //@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity handlePost(@RequestBody Beer beer){
-
-        Beer savedBeer = beerService.saveNewBeer(beer);
-
-        return new ResponseEntity(HttpStatus.CREATED);
+    public ResponseEntity<Void> handlePost(@RequestBody Beer beer){
+        beerService.saveNewBeer(beer);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping    public List<Beer> listBeers(){
+    @GetMapping
+    public List<Beer> listBeers(){
         return beerService.listBeers();
     }
 
     @GetMapping("/{beerId}")
     public Beer getBeerById(@PathVariable("beerId") UUID id){
-
         log.debug("Get Beer by Id - in controller");
-
         return beerService.getBeerById(id);
     }
 
