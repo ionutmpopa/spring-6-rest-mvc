@@ -34,6 +34,13 @@ public class CustomerController {
         return customerService.updateCustomer(id, customer);
     }
 
+    @PatchMapping("/{customerId}")
+    public ResponseEntity<Void> partiallyUpdateCustomerById(@PathVariable("customerId") UUID id, @RequestBody Customer customer){
+        log.debug("Partially update Customer by Id - in controller");
+        customerService.patchCustomerById(id, customer);
+        return ResponseEntity.accepted().build();
+    }
+
     @GetMapping
     public List<Customer> getCustomers() {
         return this.customerService.listCustomers();

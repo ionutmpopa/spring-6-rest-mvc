@@ -38,6 +38,13 @@ public class BeerController {
         return beerService.updateBeerById(id, updatedBeer);
     }
 
+    @PatchMapping("/{beerId}")
+    public ResponseEntity<Void> partiallyUpdateBeerById(@PathVariable("beerId") UUID id, @RequestBody Beer updatedBeer){
+        log.debug("Update Beer by Id - in controller");
+        beerService.patchBeerById(id, updatedBeer);
+        return ResponseEntity.accepted().build();
+    }
+
     @GetMapping
     public List<Beer> listBeers(){
         return beerService.listBeers();
