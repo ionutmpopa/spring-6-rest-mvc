@@ -80,4 +80,9 @@ public class CustomerServiceImpl implements CustomerService {
         return customerToUpdate;
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        this.customerMap.remove(id);
+    }
+
 }

@@ -24,4 +24,5 @@ public interface CustomerService {
         return Customer.builder().build();
     }
 
+    void deleteById(UUID id);
 }
