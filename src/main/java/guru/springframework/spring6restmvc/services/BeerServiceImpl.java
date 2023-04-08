@@ -22,40 +22,40 @@ public class BeerServiceImpl implements BeerService {
         this.beerMap = new HashMap<>();
 
         Beer beer1 = Beer.builder()
-                .id(UUID.randomUUID())
-                .version(1)
-                .beerName("Galaxy Cat")
-                .beerStyle(BeerStyle.PALE_ALE)
-                .upc("12356")
-                .price(new BigDecimal("12.99"))
-                .quantityOnHand(122)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+            .id(UUID.randomUUID())
+            .version(1)
+            .beerName("Galaxy Cat")
+            .beerStyle(BeerStyle.PALE_ALE)
+            .upc("12356")
+            .price(new BigDecimal("12.99"))
+            .quantityOnHand(122)
+            .createdDate(LocalDateTime.now())
+            .updateDate(LocalDateTime.now())
+            .build();
 
         Beer beer2 = Beer.builder()
-                .id(UUID.randomUUID())
-                .version(1)
-                .beerName("Crank")
-                .beerStyle(BeerStyle.PALE_ALE)
-                .upc("12356222")
-                .price(new BigDecimal("11.99"))
-                .quantityOnHand(392)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+            .id(UUID.randomUUID())
+            .version(1)
+            .beerName("Crank")
+            .beerStyle(BeerStyle.PALE_ALE)
+            .upc("12356222")
+            .price(new BigDecimal("11.99"))
+            .quantityOnHand(392)
+            .createdDate(LocalDateTime.now())
+            .updateDate(LocalDateTime.now())
+            .build();
 
         Beer beer3 = Beer.builder()
-                .id(UUID.randomUUID())
-                .version(1)
-                .beerName("Sunshine City")
-                .beerStyle(BeerStyle.IPA)
-                .upc("12356")
-                .price(new BigDecimal("13.99"))
-                .quantityOnHand(144)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+            .id(UUID.randomUUID())
+            .version(1)
+            .beerName("Sunshine City")
+            .beerStyle(BeerStyle.IPA)
+            .upc("12356")
+            .price(new BigDecimal("13.99"))
+            .quantityOnHand(144)
+            .createdDate(LocalDateTime.now())
+            .updateDate(LocalDateTime.now())
+            .build();
 
         beerMap.put(beer1.getId(), beer1);
         beerMap.put(beer2.getId(), beer2);
@@ -63,7 +63,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<Beer> listBeers(){
+    public List<Beer> listBeers() {
         return new ArrayList<>(beerMap.values());
     }
 
@@ -79,19 +79,38 @@ public class BeerServiceImpl implements BeerService {
     public Beer saveNewBeer(Beer beer) {
 
         Beer savedBeer = Beer.builder()
-                .id(UUID.randomUUID())
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .beerName(beer.getBeerName())
-                .beerStyle(beer.getBeerStyle())
-                .quantityOnHand(beer.getQuantityOnHand())
-                .upc(beer.getUpc())
-                .price(beer.getPrice())
-                .build();
+            .id(UUID.randomUUID())
+            .createdDate(LocalDateTime.now())
+            .updateDate(LocalDateTime.now())
+            .beerName(beer.getBeerName())
+            .beerStyle(beer.getBeerStyle())
+            .quantityOnHand(beer.getQuantityOnHand())
+            .upc(beer.getUpc())
+            .price(beer.getPrice())
+            .version(beer.getVersion())
+            .build();
 
         beerMap.put(savedBeer.getId(), savedBeer);
 
         return savedBeer;
+    }
+
+    @Override
+    public Beer updateBeerById(UUID id, Beer updatedBeer) {
+
+        Beer beerToUpdate = this.beerMap.get(id);
+
+        beerToUpdate.setBeerName(updatedBeer.getBeerName());
+        beerToUpdate.setBeerStyle(updatedBeer.getBeerStyle());
+        beerToUpdate.setPrice(updatedBeer.getPrice());
+        beerToUpdate.setUpc(updatedBeer.getUpc());
+        beerToUpdate.setQuantityOnHand(updatedBeer.getQuantityOnHand());
+        beerToUpdate.setUpdateDate(LocalDateTime.now());
+        beerToUpdate.setVersion(beerToUpdate.getVersion() + 1);
+
+        this.beerMap.put(beerToUpdate.getId(), beerToUpdate);
+
+        return beerToUpdate;
     }
 }
 

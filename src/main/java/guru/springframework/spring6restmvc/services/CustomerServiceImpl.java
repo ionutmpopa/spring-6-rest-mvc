@@ -18,21 +18,24 @@ public class CustomerServiceImpl implements CustomerService {
             .customerId(UUID.randomUUID())
             .customerName("Gogu Freciparu")
             .createdDate(LocalDateTime.now())
-            .version("v1")
+            .updatedDate(LocalDateTime.now())
+            .version(1)
             .build();
 
         Customer customer2 = Customer.builder()
             .customerId(UUID.randomUUID())
             .customerName("Damigean Prabuseanu")
             .createdDate(LocalDateTime.now())
-            .version("v1")
+            .updatedDate(LocalDateTime.now())
+            .version(1)
             .build();
 
         Customer customer3 = Customer.builder()
             .customerId(UUID.randomUUID())
             .customerName("Sandu Ciorba")
             .createdDate(LocalDateTime.now())
-            .version("v1")
+            .updatedDate(LocalDateTime.now())
+            .version(1)
             .build();
 
         customerMap.put(customer1.getCustomerId(), customer1);
@@ -40,12 +43,41 @@ public class CustomerServiceImpl implements CustomerService {
         customerMap.put(customer3.getCustomerId(), customer3);
     }
 
+    @Override
     public List<Customer> listCustomers() {
         return new ArrayList<>(this.customerMap.values());
     }
 
+    @Override
     public Customer getCustomer(UUID id) {
         return this.customerMap.get(id);
+    }
+
+    @Override
+    public Customer saveCustomer(Customer customer) {
+        Customer customerBuilder = Customer.builder()
+            .customerId(UUID.randomUUID())
+            .version(customer.getVersion())
+            .customerName(customer.getCustomerName())
+            .createdDate(LocalDateTime.now())
+            .updatedDate(LocalDateTime.now())
+            .build();
+
+        this.customerMap.put(customerBuilder.getCustomerId(), customerBuilder);
+
+        return customerBuilder;
+    }
+
+    @Override
+    public Customer updateCustomer(UUID id, Customer customer) {
+        Customer customerToUpdate = this.customerMap.get(id);
+
+        customerToUpdate.setCustomerName(customer.getCustomerName());
+        customerToUpdate.setVersion(customerToUpdate.getVersion()+1);
+        customerToUpdate.setUpdatedDate(LocalDateTime.now());
+        this.customerMap.put(customerToUpdate.getCustomerId(), customerToUpdate);
+
+        return customerToUpdate;
     }
 
 }

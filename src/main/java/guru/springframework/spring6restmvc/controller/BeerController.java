@@ -32,6 +32,12 @@ public class BeerController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{beerId}")
+    public Beer updateBeerById(@PathVariable("beerId") UUID id, @RequestBody Beer updatedBeer){
+        log.debug("Update Beer by Id - in controller");
+        return beerService.updateBeerById(id, updatedBeer);
+    }
+
     @GetMapping
     public List<Beer> listBeers(){
         return beerService.listBeers();

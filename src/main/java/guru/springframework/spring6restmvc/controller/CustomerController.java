@@ -4,10 +4,10 @@ import guru.springframework.spring6restmvc.model.Customer;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +20,19 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    @PostMapping
+    public ResponseEntity<Void> addCustomer(@RequestBody Customer customer) {
+        Customer savedCustomer = this.customerService.saveCustomer(customer);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Location", "/api/v1/customer/" + savedCustomer.getCustomerId().toString());
+        return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{customerId}")
+    public Customer updateBeerById(@PathVariable("customerId") UUID id, @RequestBody Customer customer){
+        log.debug("Update Customer by Id - in controller");
+        return customerService.updateCustomer(id, customer);
+    }
 
     @GetMapping
     public List<Customer> getCustomers() {
