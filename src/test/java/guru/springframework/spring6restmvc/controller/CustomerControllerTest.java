@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,6 +37,12 @@ class CustomerControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Captor
+    ArgumentCaptor<UUID> uuidArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<Customer>customerArgumentCaptor;
+
     private CustomerServiceImpl customerServiceImpl;
 
     @BeforeEach
@@ -52,7 +59,6 @@ class CustomerControllerTest {
         mockMvc.perform(delete("/api/v1/customer/" + customer.getCustomerId()))
             .andExpect(status().isAccepted());
 
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
         verify(customerService, times(1)).deleteById(uuidArgumentCaptor.capture());
 
         Assertions.assertThat(customer.getCustomerId()).isEqualTo(uuidArgumentCaptor.getValue());
@@ -69,9 +75,9 @@ class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
             .andExpect(status().isAccepted());
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
-        verify(customerService, times(1)).patchCustomerById(uuidArgumentCaptor.capture(), any(Customer.class));
+        verify(customerService, times(1)).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
         Assertions.assertThat(customer.getCustomerId()).isEqualTo(uuidArgumentCaptor.getValue());
+        Assertions.assertThat(customer).isEqualTo(customerArgumentCaptor.getValue());
     }
 
     @Test

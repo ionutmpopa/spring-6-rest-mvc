@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,6 +37,12 @@ class BeerControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Captor
+    ArgumentCaptor<UUID> uuidArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<Beer> beerArgumentCaptor;
+
     BeerServiceImpl beerServiceImpl;
 
     @BeforeEach
@@ -53,9 +60,9 @@ class BeerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beer)))
             .andExpect(status().isAccepted());
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
-        verify(beerService, times(1)).patchBeerById(uuidArgumentCaptor.capture(), any(Beer.class));
+        verify(beerService, times(1)).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
         Assertions.assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+        Assertions.assertThat(beer).isEqualTo(beerArgumentCaptor.getValue());
     }
 
     @Test
@@ -67,9 +74,7 @@ class BeerControllerTest {
         mockMvc.perform(delete("/api/v1/beer/" + beer.getId()))
             .andExpect(status().isAccepted());
 
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
         verify(beerService, times(1)).deleteById(uuidArgumentCaptor.capture());
-
         Assertions.assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
 
     }
