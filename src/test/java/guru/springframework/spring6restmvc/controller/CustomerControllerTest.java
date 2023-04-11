@@ -1,5 +1,6 @@
 package guru.springframework.spring6restmvc.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.model.Customer;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import guru.springframework.spring6restmvc.services.CustomerServiceImpl;
@@ -15,10 +16,11 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
@@ -30,11 +32,30 @@ class CustomerControllerTest {
     @MockBean
     private CustomerService customerService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private CustomerServiceImpl customerServiceImpl;
 
     @BeforeEach
     void setUp() {
         customerServiceImpl = new CustomerServiceImpl();
+    }
+
+    @Test
+    void testCreateNewBeer() throws Exception {
+        Customer customer = customerServiceImpl.listCustomers().get(0);
+        customer.setVersion(null);
+        customer.setCustomerId(null);
+
+        given(customerService.saveCustomer(any(Customer.class))).willReturn(customerServiceImpl.listCustomers().get(1));
+
+        mockMvc.perform(post("/api/v1/customer")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(customer)))
+            .andExpect(status().isCreated())
+            .andExpect(header().exists("Location"));
     }
 
     @Test
