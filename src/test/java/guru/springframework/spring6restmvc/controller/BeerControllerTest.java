@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.model.Beer;
 import guru.springframework.spring6restmvc.services.BeerService;
 import guru.springframework.spring6restmvc.services.BeerServiceImpl;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,6 +41,22 @@ class BeerControllerTest {
     @BeforeEach
     public void setUp() {
         beerServiceImpl = new BeerServiceImpl();
+    }
+
+    @Test
+    void testDeleteBeer() throws Exception {
+        Beer beer = beerServiceImpl.listBeers().get(0);
+
+        doNothing().when(beerService).deleteById(beer.getId());
+
+        mockMvc.perform(delete("/api/v1/beer/" + beer.getId()))
+            .andExpect(status().isAccepted());
+
+        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(beerService, times(1)).deleteById(uuidArgumentCaptor.capture());
+
+        Assertions.assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+
     }
 
     @Test
