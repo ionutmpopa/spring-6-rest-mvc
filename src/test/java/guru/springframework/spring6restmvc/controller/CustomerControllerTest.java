@@ -60,6 +60,21 @@ class CustomerControllerTest {
     }
 
     @Test
+    void testPatchCustomer() throws Exception {
+        Customer customer = customerServiceImpl.listCustomers().get(0);
+        customer.setCustomerName("Nimeni");
+
+        mockMvc.perform(patch("/api/v1/customer/" + customer.getCustomerId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(customer)))
+            .andExpect(status().isAccepted());
+        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(customerService, times(1)).patchCustomerById(uuidArgumentCaptor.capture(), any(Customer.class));
+        Assertions.assertThat(customer.getCustomerId()).isEqualTo(uuidArgumentCaptor.getValue());
+    }
+
+    @Test
     void testUpdateCustomer() throws Exception {
         Customer customer = customerServiceImpl.listCustomers().get(0);
         customer.setCustomerName("Altul");
