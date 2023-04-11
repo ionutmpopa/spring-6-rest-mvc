@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.UUID;
 
+import static guru.springframework.spring6restmvc.controller.CustomerController.API_V_1_CUSTOMER;
+import static guru.springframework.spring6restmvc.controller.CustomerController.CUSTOMER_PATH_ID;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -56,7 +58,7 @@ class CustomerControllerTest {
 
         doNothing().when(customerService).deleteById(customer.getCustomerId());
 
-        mockMvc.perform(delete("/api/v1/customer/" + customer.getCustomerId()))
+        mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getCustomerId()))
             .andExpect(status().isAccepted());
 
         verify(customerService, times(1)).deleteById(uuidArgumentCaptor.capture());
@@ -70,7 +72,7 @@ class CustomerControllerTest {
         Customer customer = customerServiceImpl.listCustomers().get(0);
         customer.setCustomerName("Nimeni");
 
-        mockMvc.perform(patch("/api/v1/customer/" + customer.getCustomerId())
+        mockMvc.perform(patch(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -87,7 +89,7 @@ class CustomerControllerTest {
 
         given(customerService.updateCustomer(customer.getCustomerId(), customer)).willReturn(customer);
 
-        mockMvc.perform(put("/api/v1/customer/" + customer.getCustomerId())
+        mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -105,7 +107,7 @@ class CustomerControllerTest {
 
         given(customerService.saveCustomer(any(Customer.class))).willReturn(customerServiceImpl.listCustomers().get(1));
 
-        mockMvc.perform(post("/api/v1/customer")
+        mockMvc.perform(post(API_V_1_CUSTOMER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -120,7 +122,7 @@ class CustomerControllerTest {
 
         given(customerService.listCustomers()).willReturn(customers);
 
-        mockMvc.perform(get("/api/v1/customer")
+        mockMvc.perform(get(API_V_1_CUSTOMER)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -134,7 +136,7 @@ class CustomerControllerTest {
         Customer customer = customerServiceImpl.listCustomers().get(0);
         given(customerService.getCustomer(customer.getCustomerId())).willReturn(customer);
 
-        mockMvc.perform(get("/api/v1/customer/" + customer.getCustomerId().toString())
+        mockMvc.perform(get(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))

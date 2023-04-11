@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.UUID;
 
+import static guru.springframework.spring6restmvc.controller.BeerController.BEER_PATH_ID;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -55,7 +56,7 @@ class BeerControllerTest {
         Beer beer = beerServiceImpl.listBeers().get(0);
         beer.setBeerName("Ursus");
 
-        mockMvc.perform(patch("/api/v1/beer/" + beer.getId())
+        mockMvc.perform(patch(BEER_PATH_ID, beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beer)))
@@ -71,7 +72,7 @@ class BeerControllerTest {
 
         doNothing().when(beerService).deleteById(beer.getId());
 
-        mockMvc.perform(delete("/api/v1/beer/" + beer.getId()))
+        mockMvc.perform(delete(BEER_PATH_ID, beer.getId()))
             .andExpect(status().isAccepted());
 
         verify(beerService, times(1)).deleteById(uuidArgumentCaptor.capture());
@@ -86,7 +87,7 @@ class BeerControllerTest {
 
         given(beerService.updateBeerById(beer.getId(), beer)).willReturn(beer);
 
-        mockMvc.perform(put("/api/v1/beer/" + beer.getId())
+        mockMvc.perform(put(BEER_PATH_ID, beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beer)))
@@ -105,7 +106,7 @@ class BeerControllerTest {
 
         given(beerService.saveNewBeer(any(Beer.class))).willReturn(beerServiceImpl.listBeers().get(1));
 
-        mockMvc.perform(post("/api/v1/beer")
+        mockMvc.perform(post(BeerController.API_V_1_BEER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beer)))
@@ -120,7 +121,7 @@ class BeerControllerTest {
 
         when(beerService.getBeerById(testBeer.getId())).thenReturn(testBeer);
 
-        mockMvc.perform(get("/api/v1/beer/" + testBeer.getId())
+        mockMvc.perform(get(BEER_PATH_ID, testBeer.getId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -136,7 +137,7 @@ class BeerControllerTest {
 
         when(beerService.listBeers()).thenReturn(beers);
 
-        mockMvc.perform(get("/api/v1/beer")
+        mockMvc.perform(get(BeerController.API_V_1_BEER)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))

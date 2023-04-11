@@ -14,9 +14,12 @@ import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/customer")
+@RequestMapping(CustomerController.API_V_1_CUSTOMER)
 @RestController
 public class CustomerController {
+
+    public static final String API_V_1_CUSTOMER = "/api/v1/customer";
+    public static final String CUSTOMER_PATH_ID = API_V_1_CUSTOMER + "/{customerId}";
 
     private final CustomerService customerService;
 
@@ -24,7 +27,7 @@ public class CustomerController {
     public ResponseEntity<Void> addCustomer(@RequestBody Customer customer) {
         Customer savedCustomer = this.customerService.saveCustomer(customer);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Location", "/api/v1/customer/" + savedCustomer.getCustomerId().toString());
+        httpHeaders.add("Location", API_V_1_CUSTOMER + "/" + savedCustomer.getCustomerId().toString());
         return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
     }
 
