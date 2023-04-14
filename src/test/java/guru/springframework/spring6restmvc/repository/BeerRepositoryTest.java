@@ -1,13 +1,16 @@
 package guru.springframework.spring6restmvc.repository;
 
+import guru.springframework.spring6restmvc.bootstrap.BootstrapApp;
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
 import guru.springframework.spring6restmvc.domain.Beer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 @DataJpaTest
+@Import(BootstrapApp.class)
 class BeerRepositoryTest {
 
     @Autowired
@@ -27,4 +30,8 @@ class BeerRepositoryTest {
         Assertions.assertThat(beerFromDb.getBeerName()).isEqualTo("Ciuc");
     }
 
+    @Test
+    void beerInitialization() {
+        Assertions.assertThat(beerRepository.count()).isEqualTo(3L);
+    }
 }

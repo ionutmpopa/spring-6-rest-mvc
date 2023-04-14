@@ -1,8 +1,8 @@
 package guru.springframework.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.controller.model.CustomerDTO;
+import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import guru.springframework.spring6restmvc.services.CustomerServiceImpl;
 import org.assertj.core.api.Assertions;

@@ -1,7 +1,7 @@
 package guru.springframework.spring6restmvc.controller;
 
-import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.controller.model.CustomerDTO;
+import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

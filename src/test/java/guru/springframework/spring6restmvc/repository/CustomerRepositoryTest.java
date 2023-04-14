@@ -1,12 +1,15 @@
 package guru.springframework.spring6restmvc.repository;
 
+import guru.springframework.spring6restmvc.bootstrap.BootstrapApp;
 import guru.springframework.spring6restmvc.domain.Customer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 @DataJpaTest
+@Import(BootstrapApp.class)
 class CustomerRepositoryTest {
 
     @Autowired
@@ -23,5 +26,10 @@ class CustomerRepositoryTest {
 
         Assertions.assertThat(savedCustomer.getId()).isNotNull();
         Assertions.assertThat(customerFromDb.getCustomerName()).isEqualTo("Gicu Grecu");
+    }
+
+    @Test
+    void customerInitialization() {
+        Assertions.assertThat(customerRepository.count()).isEqualTo(3L);
     }
 }
