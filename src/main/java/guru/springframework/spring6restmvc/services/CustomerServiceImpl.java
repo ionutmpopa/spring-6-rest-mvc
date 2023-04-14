@@ -1,12 +1,14 @@
 package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.controller.model.CustomerDTO;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Primary
 @Service
 public class CustomerServiceImpl implements CustomerService {
 

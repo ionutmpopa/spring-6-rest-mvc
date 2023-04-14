@@ -1,10 +1,14 @@
 package guru.springframework.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.spring6restmvc.bootstrap.BootstrapApp;
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
+import guru.springframework.spring6restmvc.mapper.BeerMapper;
+import guru.springframework.spring6restmvc.repository.BeerRepository;
 import guru.springframework.spring6restmvc.services.BeerService;
 import guru.springframework.spring6restmvc.services.BeerServiceImpl;
+import guru.springframework.spring6restmvc.services.BeerServiceJPA;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +17,7 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -46,7 +51,15 @@ class BeerControllerTest {
     @Captor
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
-    BeerServiceImpl beerServiceImpl;
+    BeerService beerServiceImpl;
+
+//    BeerService getBeerServiceJPA;
+//
+//    @Autowired
+//    BeerRepository beerRepository;
+//
+//    @Autowired
+//    BeerMapper beerMapper;
 
     @BeforeEach
     public void setUp() {
