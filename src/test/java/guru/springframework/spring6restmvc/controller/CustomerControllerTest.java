@@ -2,7 +2,7 @@ package guru.springframework.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
-import guru.springframework.spring6restmvc.model.Customer;
+import guru.springframework.spring6restmvc.model.CustomerDTO;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import guru.springframework.spring6restmvc.services.CustomerServiceImpl;
 import org.assertj.core.api.Assertions;
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static guru.springframework.spring6restmvc.controller.BeerController.BEER_PATH_ID;
 import static guru.springframework.spring6restmvc.controller.CustomerController.API_V_1_CUSTOMER;
 import static guru.springframework.spring6restmvc.controller.CustomerController.CUSTOMER_PATH_ID;
 import static org.hamcrest.Matchers.is;
@@ -46,7 +45,7 @@ class CustomerControllerTest {
     ArgumentCaptor<UUID> uuidArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<Customer>customerArgumentCaptor;
+    ArgumentCaptor<CustomerDTO>customerArgumentCaptor;
 
     private CustomerServiceImpl customerServiceImpl;
 
@@ -57,7 +56,7 @@ class CustomerControllerTest {
 
     @Test
     void testDeleteCustomer() throws Exception {
-        Customer customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
 
         doNothing().when(customerService).deleteById(customer.getCustomerId());
 
@@ -72,7 +71,7 @@ class CustomerControllerTest {
 
     @Test
     void testPatchCustomer() throws Exception {
-        Customer customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
         customer.setCustomerName("Nimeni");
 
         mockMvc.perform(patch(CUSTOMER_PATH_ID, customer.getCustomerId())
@@ -87,7 +86,7 @@ class CustomerControllerTest {
 
     @Test
     void testUpdateCustomer() throws Exception {
-        Customer customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
         customer.setCustomerName("Altul");
 
         given(customerService.updateCustomer(customer.getCustomerId(), customer)).willReturn(customer);
@@ -99,16 +98,16 @@ class CustomerControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.customerName", is("Altul")));
 
-        verify(customerService, times(1)).updateCustomer(any(UUID.class), any(Customer.class));
+        verify(customerService, times(1)).updateCustomer(any(UUID.class), any(CustomerDTO.class));
     }
 
     @Test
     void testCreateNewCustomer() throws Exception {
-        Customer customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
         customer.setVersion(null);
         customer.setCustomerId(null);
 
-        given(customerService.saveCustomer(any(Customer.class))).willReturn(customerServiceImpl.listCustomers().get(1));
+        given(customerService.saveCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.listCustomers().get(1));
 
         mockMvc.perform(post(API_V_1_CUSTOMER)
                 .accept(MediaType.APPLICATION_JSON)
@@ -121,7 +120,7 @@ class CustomerControllerTest {
     @Test
     void getCustomers() throws Exception {
 
-        List<Customer> customers = customerServiceImpl.listCustomers();
+        List<CustomerDTO> customers = customerServiceImpl.listCustomers();
 
         given(customerService.listCustomers()).willReturn(customers);
 
@@ -136,7 +135,7 @@ class CustomerControllerTest {
     @Test
     void getCustomerById() throws Exception {
 
-        Customer customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
         given(customerService.getCustomer(customer.getCustomerId())).willReturn(Optional.of(customer));
 
         mockMvc.perform(get(CUSTOMER_PATH_ID, customer.getCustomerId())
