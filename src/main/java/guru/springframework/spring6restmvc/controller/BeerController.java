@@ -1,5 +1,6 @@
 package guru.springframework.spring6restmvc.controller;
 
+import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.model.Beer;
 import guru.springframework.spring6restmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,7 +59,7 @@ public class BeerController {
     @GetMapping(BEER_ID)
     public Beer getBeerById(@PathVariable("beerId") UUID id){
         log.debug("Get Beer by Id - in controller");
-        return beerService.getBeerById(id);
+        return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
     }
 
     @DeleteMapping(BEER_ID)
@@ -65,5 +67,4 @@ public class BeerController {
         this.beerService.deleteById(id);
         return ResponseEntity.accepted().build();
     }
-
 }

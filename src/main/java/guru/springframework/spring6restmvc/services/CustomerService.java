@@ -4,6 +4,7 @@ import guru.springframework.spring6restmvc.model.Customer;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerService {
@@ -12,8 +13,8 @@ public interface CustomerService {
         return Collections.emptyList();
     }
 
-    default Customer getCustomer(UUID id) {
-        return Customer.builder().build();
+    default Optional<Customer> getCustomer(UUID id) {
+        return Optional.of(Customer.builder().build());
     }
 
     default Customer saveCustomer(Customer customer) {

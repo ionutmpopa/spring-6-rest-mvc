@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.model.Customer;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import guru.springframework.spring6restmvc.services.CustomerServiceImpl;
@@ -16,8 +17,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import static guru.springframework.spring6restmvc.controller.BeerController.BEER_PATH_ID;
 import static guru.springframework.spring6restmvc.controller.CustomerController.API_V_1_CUSTOMER;
 import static guru.springframework.spring6restmvc.controller.CustomerController.CUSTOMER_PATH_ID;
 import static org.hamcrest.Matchers.is;
@@ -134,7 +137,7 @@ class CustomerControllerTest {
     void getCustomerById() throws Exception {
 
         Customer customer = customerServiceImpl.listCustomers().get(0);
-        given(customerService.getCustomer(customer.getCustomerId())).willReturn(customer);
+        given(customerService.getCustomer(customer.getCustomerId())).willReturn(Optional.of(customer));
 
         mockMvc.perform(get(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON))
@@ -142,5 +145,14 @@ class CustomerControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.customerName", is(customer.getCustomerName())));
 
+    }
+
+    @Test
+    void getBeerByIdNotFound() throws Exception {
+
+        given(customerService.getCustomer(any(UUID.class))).willThrow(NotFoundException.class);
+
+        mockMvc.perform(get(CUSTOMER_PATH_ID, UUID.randomUUID()))
+            .andExpect(status().isNotFound());
     }
 }
