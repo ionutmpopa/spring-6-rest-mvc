@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.services;
 
-import guru.springframework.spring6restmvc.model.CustomerDTO;
+import guru.springframework.spring6restmvc.controller.model.CustomerDTO;
 
 import java.util.Collections;
 import java.util.List;
