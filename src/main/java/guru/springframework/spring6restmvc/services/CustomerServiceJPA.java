@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +35,6 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public CustomerDTO saveCustomer(CustomerDTO customer) {
-        customer.setCreatedDate(LocalDateTime.now());
         return customerMapper.customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(customer)));
     }
 
@@ -47,7 +45,6 @@ public class CustomerServiceJPA implements CustomerService {
         if (customerToUpdate.isPresent()) {
             Customer customer = customerToUpdate.get();
             customer.setCustomerName(customerDTO.getCustomerName());
-            customer.setUpdatedDate(LocalDateTime.now());
             return Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(customer)));
         } else {
             return Optional.empty();

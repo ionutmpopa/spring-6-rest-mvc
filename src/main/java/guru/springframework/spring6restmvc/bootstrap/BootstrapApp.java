@@ -11,7 +11,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -34,20 +33,14 @@ public class BootstrapApp implements CommandLineRunner {
     private void loadCustomers() {
         Customer customer1 = Customer.builder()
             .customerName("Gogu Freciparu")
-            .createdDate(LocalDateTime.now())
-            .updatedDate(LocalDateTime.now())
             .build();
 
         Customer customer2 = Customer.builder()
             .customerName("Damigean Prabuseanu")
-            .createdDate(LocalDateTime.now())
-            .updatedDate(LocalDateTime.now())
             .build();
 
         Customer customer3 = Customer.builder()
             .customerName("Sandu Ciorba")
-            .createdDate(LocalDateTime.now())
-            .updatedDate(LocalDateTime.now())
             .build();
 
         customerRepository.saveAllAndFlush(List.of(customer1, customer2, customer3));
@@ -60,8 +53,6 @@ public class BootstrapApp implements CommandLineRunner {
             .upc("12356")
             .price(new BigDecimal("12.99"))
             .quantityOnHand(122)
-            .createdDate(LocalDateTime.now())
-            .updateDate(LocalDateTime.now())
             .build();
 
         Beer beer2 = Beer.builder()
@@ -70,8 +61,6 @@ public class BootstrapApp implements CommandLineRunner {
             .upc("12356222")
             .price(new BigDecimal("11.99"))
             .quantityOnHand(392)
-            .createdDate(LocalDateTime.now())
-            .updateDate(LocalDateTime.now())
             .build();
 
         Beer beer3 = Beer.builder()
@@ -80,8 +69,6 @@ public class BootstrapApp implements CommandLineRunner {
             .upc("12356")
             .price(new BigDecimal("13.99"))
             .quantityOnHand(144)
-            .createdDate(LocalDateTime.now())
-            .updateDate(LocalDateTime.now())
             .build();
 
         beerRepository.saveAllAndFlush(List.of(beer1, beer2, beer3));

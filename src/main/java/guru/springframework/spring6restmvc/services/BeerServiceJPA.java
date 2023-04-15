@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +36,6 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public BeerDTO saveNewBeer(BeerDTO beer) {
-        beer.setCreatedDate(LocalDateTime.now());
         return mapper.beerToBeerDto(beerRepository.save(mapper.beerDtoToBeer(beer)));
     }
 
@@ -50,7 +48,6 @@ public class BeerServiceJPA implements BeerService {
             Beer beer = beerToUpdate.get();
             beer.setBeerName(updatedBeer.getBeerName());
             beer.setBeerStyle(updatedBeer.getBeerStyle());
-            beer.setUpdateDate(LocalDateTime.now());
             beer.setPrice(updatedBeer.getPrice());
             beer.setUpc(updatedBeer.getUpc());
             beer.setQuantityOnHand(updatedBeer.getQuantityOnHand());

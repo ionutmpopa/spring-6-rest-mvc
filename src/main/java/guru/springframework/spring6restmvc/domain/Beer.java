@@ -3,7 +3,9 @@ package guru.springframework.spring6restmvc.domain;
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,6 +32,10 @@ public class Beer {
     private String upc;
     private Integer quantityOnHand;
     private BigDecimal price;
+
+    @CreationTimestamp
     private LocalDateTime createdDate;
+
+    @UpdateTimestamp
     private LocalDateTime updateDate;
 }
