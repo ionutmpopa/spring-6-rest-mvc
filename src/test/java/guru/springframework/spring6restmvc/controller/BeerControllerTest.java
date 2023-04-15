@@ -1,14 +1,10 @@
 package guru.springframework.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.spring6restmvc.bootstrap.BootstrapApp;
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
-import guru.springframework.spring6restmvc.mapper.BeerMapper;
-import guru.springframework.spring6restmvc.repository.BeerRepository;
 import guru.springframework.spring6restmvc.services.BeerService;
 import guru.springframework.spring6restmvc.services.BeerServiceImpl;
-import guru.springframework.spring6restmvc.services.BeerServiceJPA;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +13,6 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -85,7 +80,7 @@ class BeerControllerTest {
     void testDeleteBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.listBeers().get(0);
 
-        doNothing().when(beerService).deleteById(beer.getId());
+        doReturn(true).when(beerService).deleteById(beer.getId());
 
         mockMvc.perform(delete(BEER_PATH_ID, beer.getId()))
             .andExpect(status().isAccepted());
@@ -109,7 +104,7 @@ class BeerControllerTest {
         BeerDTO beer = beerServiceImpl.listBeers().get(0);
         beer.setBeerName("Ciuc");
 
-        given(beerService.updateBeerById(beer.getId(), beer)).willReturn(beer);
+        given(beerService.updateBeerById(beer.getId(), beer)).willReturn(Optional.of(beer));
 
         mockMvc.perform(put(BEER_PATH_ID, beer.getId())
                 .accept(MediaType.APPLICATION_JSON)

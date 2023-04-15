@@ -33,16 +33,25 @@ public class CustomerController {
     }
 
     @PutMapping("/{customerId}")
-    public CustomerDTO updateBeerById(@PathVariable("customerId") UUID id, @RequestBody CustomerDTO customer){
+    public ResponseEntity<CustomerDTO> updateCustomerById(@PathVariable("customerId") UUID id, @RequestBody CustomerDTO customer){
         log.debug("Update Customer by Id - in controller");
-        return customerService.updateCustomer(id, customer);
+
+        CustomerDTO customerDTO = customerService.updateCustomer(id, customer).orElseThrow(NotFoundException::new);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("location", API_V_1_CUSTOMER + "/" + customerDTO.getId().toString());
+
+        return ResponseEntity.ok().headers(httpHeaders).body(customerDTO);
+
     }
 
     @PatchMapping("/{customerId}")
     public ResponseEntity<Void> partiallyUpdateCustomerById(@PathVariable("customerId") UUID id, @RequestBody CustomerDTO customer){
         log.debug("Partially update Customer by Id - in controller");
-        customerService.patchCustomerById(id, customer);
-        return ResponseEntity.accepted().build();
+        if (customerService.patchCustomerById(id, customer)) {
+            return ResponseEntity.accepted().build();
+        }
+        throw new NotFoundException();
     }
 
     @GetMapping
@@ -57,8 +66,10 @@ public class CustomerController {
 
     @DeleteMapping("/{customerId}")
     public ResponseEntity<Void> deleteCustomerById(@PathVariable("customerId") UUID id) {
-        this.customerService.deleteById(id);
-        return ResponseEntity.accepted().build();
+        if (this.customerService.deleteById(id)) {
+            return ResponseEntity.accepted().build();
+        }
+        throw new NotFoundException();
     }
 
 }

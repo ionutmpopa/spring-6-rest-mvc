@@ -1,14 +1,12 @@
 package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.controller.model.CustomerDTO;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Primary
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -72,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO updateCustomer(UUID id, CustomerDTO customer) {
+    public Optional<CustomerDTO> updateCustomer(UUID id, CustomerDTO customer) {
         CustomerDTO customerToUpdate = this.customerMap.get(id);
 
         customerToUpdate.setCustomerName(customer.getCustomerName());
@@ -80,21 +78,23 @@ public class CustomerServiceImpl implements CustomerService {
         customerToUpdate.setUpdatedDate(LocalDateTime.now());
         this.customerMap.put(customerToUpdate.getId(), customerToUpdate);
 
-        return customerToUpdate;
+        return Optional.of(customerToUpdate);
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public boolean deleteById(UUID id) {
         this.customerMap.remove(id);
+        return true;
     }
 
     @Override
-    public void patchCustomerById(UUID id, CustomerDTO customer) {
+    public boolean patchCustomerById(UUID id, CustomerDTO customer) {
         CustomerDTO existing = customerMap.get(id);
 
         if (StringUtils.hasText(customer.getCustomerName())){
             existing.setCustomerName(customer.getCustomerName());
         }
+        return true;
     }
 
 }

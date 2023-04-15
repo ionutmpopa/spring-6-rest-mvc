@@ -121,7 +121,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public BeerDTO updateBeerById(UUID id, BeerDTO updatedBeer) {
+    public Optional<BeerDTO> updateBeerById(UUID id, BeerDTO updatedBeer) {
 
         BeerDTO beerToUpdate = this.beerMap.get(id);
 
@@ -135,12 +135,16 @@ public class BeerServiceImpl implements BeerService {
 
         this.beerMap.put(beerToUpdate.getId(), beerToUpdate);
 
-        return beerToUpdate;
+        return Optional.of(beerToUpdate);
     }
 
     @Override
-    public void deleteById(UUID id) {
-        this.beerMap.remove(id);
+    public boolean deleteById(UUID id) {
+        if (beerMap.containsKey(id)) {
+            this.beerMap.remove(id);
+            return true;
+        }
+        return false;
     }
 }
 

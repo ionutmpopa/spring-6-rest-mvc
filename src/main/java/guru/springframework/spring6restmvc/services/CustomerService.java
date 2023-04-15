@@ -21,11 +21,11 @@ public interface CustomerService {
         return CustomerDTO.builder().build();
     }
 
-    default CustomerDTO updateCustomer(UUID id, CustomerDTO customer) {
-        return CustomerDTO.builder().build();
+    default Optional<CustomerDTO> updateCustomer(UUID id, CustomerDTO customer) {
+        return Optional.of(CustomerDTO.builder().build());
     }
 
-    void deleteById(UUID id);
+    boolean deleteById(UUID id);
 
-    void patchCustomerById(UUID beerId, CustomerDTO customer);
+    boolean patchCustomerById(UUID beerId, CustomerDTO customer);
 }

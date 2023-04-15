@@ -3,11 +3,13 @@ package guru.springframework.spring6restmvc.controller;
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.services.BeerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.UUID;
 /**
  * Created by jt, Spring Framework Guru.
  */
+@Validated
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping(BeerController.API_V_1_BEER)
@@ -28,7 +31,7 @@ public class BeerController {
     private final BeerService beerService;
 
     @PostMapping
-    public ResponseEntity<Void> handlePost(@RequestBody BeerDTO beer){
+    public ResponseEntity<Void> addNewBeer(@Valid @RequestBody BeerDTO beer){
         BeerDTO savedBeer = beerService.saveNewBeer(beer);
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -38,9 +41,15 @@ public class BeerController {
     }
 
     @PutMapping(BEER_ID)
-    public BeerDTO updateBeerById(@PathVariable("beerId") UUID id, @RequestBody BeerDTO updatedBeer){
+    public ResponseEntity<BeerDTO> updateBeerById(@PathVariable("beerId") UUID id, @Valid @RequestBody BeerDTO updatedBeer){
         log.debug("Update Beer by Id - in controller");
-        return beerService.updateBeerById(id, updatedBeer);
+
+        BeerDTO updatedBeerDTO = beerService.updateBeerById(id, updatedBeer).orElseThrow(NotFoundException::new);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("location", API_V_1_BEER + "/" + updatedBeerDTO.getId().toString());
+
+        return ResponseEntity.ok().headers(httpHeaders).body(updatedBeerDTO);
     }
 
     @PatchMapping(BEER_ID)
@@ -63,7 +72,9 @@ public class BeerController {
 
     @DeleteMapping(BEER_ID)
     public ResponseEntity<Void> deleteBeerById(@PathVariable("beerId") UUID id) {
-        this.beerService.deleteById(id);
-        return ResponseEntity.accepted().build();
+        if (this.beerService.deleteById(id)) {
+            return ResponseEntity.accepted().build();
+        }
+        throw new NotFoundException();
     }
 }

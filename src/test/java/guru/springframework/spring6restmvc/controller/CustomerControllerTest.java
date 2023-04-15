@@ -58,7 +58,7 @@ class CustomerControllerTest {
     void testDeleteCustomer() throws Exception {
         CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
 
-        doNothing().when(customerService).deleteById(customer.getId());
+        doReturn(true).when(customerService).deleteById(customer.getId());
 
         mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getId()))
             .andExpect(status().isAccepted());
@@ -73,6 +73,8 @@ class CustomerControllerTest {
     void testPatchCustomer() throws Exception {
         CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
         customer.setCustomerName("Nimeni");
+
+        doReturn(true).when(customerService).patchCustomerById(customer.getId(), customer);
 
         mockMvc.perform(patch(CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
@@ -89,7 +91,7 @@ class CustomerControllerTest {
         CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
         customer.setCustomerName("Altul");
 
-        given(customerService.updateCustomer(customer.getId(), customer)).willReturn(customer);
+        given(customerService.updateCustomer(customer.getId(), customer)).willReturn(Optional.of(customer));
 
         mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)

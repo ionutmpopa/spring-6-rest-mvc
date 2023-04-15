@@ -2,6 +2,7 @@ package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
 import guru.springframework.spring6restmvc.domain.Beer;
+import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.mapper.BeerMapper;
 import guru.springframework.spring6restmvc.repository.BeerRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,34 +37,37 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public BeerDTO saveNewBeer(BeerDTO beer) {
+        beer.setCreatedDate(LocalDateTime.now());
         return mapper.beerToBeerDto(beerRepository.save(mapper.beerDtoToBeer(beer)));
     }
 
     @Override
-    public BeerDTO updateBeerById(UUID id, BeerDTO updatedBeer) {
+    public Optional<BeerDTO> updateBeerById(UUID id, BeerDTO updatedBeer) {
 
         Optional<Beer> beerToUpdate = beerRepository.findById(id);
 
-        BeerDTO.BeerDTOBuilder beerDTO = BeerDTO.builder();
-
         if (beerToUpdate.isPresent()) {
-           beerDTO
-                .beerName(updatedBeer.getBeerName())
-                .beerStyle(updatedBeer.getBeerStyle())
-                .createdDate(updatedBeer.getCreatedDate())
-                .updateDate(LocalDateTime.now())
-                .price(updatedBeer.getPrice())
-                .upc(updatedBeer.getUpc())
-                .quantityOnHand(updatedBeer.getQuantityOnHand())
-                .build();
+            Beer beer = beerToUpdate.get();
+            beer.setBeerName(updatedBeer.getBeerName());
+            beer.setBeerStyle(updatedBeer.getBeerStyle());
+            beer.setUpdateDate(LocalDateTime.now());
+            beer.setPrice(updatedBeer.getPrice());
+            beer.setUpc(updatedBeer.getUpc());
+            beer.setQuantityOnHand(updatedBeer.getQuantityOnHand());
+            return Optional.of(mapper.beerToBeerDto(beerRepository.save(beer)));
+        } else {
+            return Optional.empty();
         }
-
-        return mapper.beerToBeerDto(beerRepository.save(mapper.beerDtoToBeer(beerDTO.build())));
     }
 
     @Override
-    public void deleteById(UUID beerId) {
-        beerRepository.deleteById(beerId);
+    public boolean deleteById(UUID beerId) throws IllegalArgumentException {
+
+        if (beerRepository.existsById(beerId)) {
+            beerRepository.deleteById(beerId);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -94,6 +98,8 @@ public class BeerServiceJPA implements BeerService {
                 beerToUpdate.setUpc(beerDTO.getUpc());
             }
             beerRepository.save(beerToUpdate);
+        } else {
+            throw new NotFoundException();
         }
     }
 }
