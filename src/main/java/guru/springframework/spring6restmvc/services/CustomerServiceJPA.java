@@ -35,7 +35,7 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public CustomerDTO saveCustomer(CustomerDTO customer) {
-        return customerMapper.customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(customer)));
+        return customerMapper.customerToCustomerDto(customerRepository.saveAndFlush(customerMapper.customerDtoToCustomer(customer)));
     }
 
     @Override

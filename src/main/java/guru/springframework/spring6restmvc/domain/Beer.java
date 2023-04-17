@@ -1,7 +1,11 @@
 package guru.springframework.spring6restmvc.domain;
 
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
+import guru.springframework.spring6restmvc.controller.model.EnumValidator;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -27,10 +31,22 @@ public class Beer {
 
     @Version
     private Integer version;
+
+    @NotNull
+    @NotBlank
+    @Size(max = 50)
     private String beerName;
+
+    @EnumValidator(enumClass = BeerStyle.class)
+    @NotNull
     private BeerStyle beerStyle;
+
+    @NotNull
+    @NotBlank
     private String upc;
     private Integer quantityOnHand;
+
+    @NotNull
     private BigDecimal price;
 
     @CreationTimestamp

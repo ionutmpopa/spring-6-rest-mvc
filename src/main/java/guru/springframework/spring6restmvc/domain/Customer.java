@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -26,6 +27,7 @@ public class Customer {
     @Version
     private Integer version;
 
+    @NotNull
     private String customerName;
 
     @CreationTimestamp
