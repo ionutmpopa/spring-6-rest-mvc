@@ -1,0 +1,1 @@
+[{"quantityOnHand":"must not be null"},{"upc":"must not be blank"},{"price":"must not be null"},{"beerStyle":"must not be null"},{"beerName":"must not be null"},{"beerName":"must not be blank"},{"upc":"must not be null"}]

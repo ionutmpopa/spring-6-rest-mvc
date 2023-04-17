@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -131,6 +132,21 @@ class BeerControllerTest {
                 .content(objectMapper.writeValueAsString(beer)))
             .andExpect(status().isCreated())
             .andExpect(header().exists("Location"));
+    }
+
+    @Test
+    void testCreateNewBeer_validationException() throws Exception {
+        BeerDTO beer = BeerDTO.builder().build();
+
+        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beer);
+
+        MvcResult mvcResult = mockMvc.perform(post(BeerController.API_V_1_BEER)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beer)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.length()", is(6)))
+            .andReturn();
     }
 
     @Test
