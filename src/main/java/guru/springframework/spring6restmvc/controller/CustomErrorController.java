@@ -1,6 +1,8 @@
 package guru.springframework.spring6restmvc.controller;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +26,23 @@ public class CustomErrorController {
             .toList();
 
         return ResponseEntity.badRequest().body(errorList);
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    ResponseEntity<List<Map<String, String>>> handleJpaValidation(TransactionSystemException exception) {
+
+        ResponseEntity.BodyBuilder responseEntity = ResponseEntity.badRequest();
+        if (exception.getCause().getCause() instanceof ConstraintViolationException constraintViolationException) {
+            List<Map<String, String>> errorList = constraintViolationException.getConstraintViolations().stream()
+                .map(error -> {
+                    Map<String, String> errorMap = new HashMap<>();
+                    errorMap.put(error.getPropertyPath().toString(), error.getMessage());
+                    return errorMap;
+                })
+                .toList();
+            return responseEntity.body(errorList);
+        }
+        return responseEntity.build();
     }
 
 }
