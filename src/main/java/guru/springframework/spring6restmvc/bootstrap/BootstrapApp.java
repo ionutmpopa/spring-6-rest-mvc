@@ -23,8 +23,15 @@ public class BootstrapApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        loadBeers();
-        loadCustomers();
+
+        if (beerRepository.count() == 0) {
+            loadBeers();
+        }
+
+        if (customerRepository.count() == 0) {
+            loadCustomers();
+        }
+
         log.info("Beers in DB: {}", beerRepository.count());
         log.info("Customers in DB: {}", customerRepository.count());
 
