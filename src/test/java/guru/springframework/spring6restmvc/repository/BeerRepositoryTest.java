@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.repository;
 import guru.springframework.spring6restmvc.bootstrap.BootstrapApp;
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
 import guru.springframework.spring6restmvc.domain.Beer;
+import guru.springframework.spring6restmvc.services.BeerCsvServiceImpl;
 import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-@Import(BootstrapApp.class)
+@Import({BootstrapApp.class, BeerCsvServiceImpl.class})
 class BeerRepositoryTest {
 
     @Autowired
@@ -54,6 +55,6 @@ class BeerRepositoryTest {
 
     @Test
     void beerInitialization() {
-        Assertions.assertThat(beerRepository.count()).isEqualTo(3L);
+        Assertions.assertThat(beerRepository.count()).isEqualTo(2413L);
     }
 }

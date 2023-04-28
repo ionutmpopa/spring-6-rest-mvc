@@ -2,6 +2,7 @@ package guru.springframework.spring6restmvc.repository;
 
 import guru.springframework.spring6restmvc.bootstrap.BootstrapApp;
 import guru.springframework.spring6restmvc.domain.Customer;
+import guru.springframework.spring6restmvc.services.BeerCsvServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DataJpaTest
-@Import(BootstrapApp.class)
+@Import({BootstrapApp.class, BeerCsvServiceImpl.class})
 class CustomerRepositoryTest {
 
     @Autowired

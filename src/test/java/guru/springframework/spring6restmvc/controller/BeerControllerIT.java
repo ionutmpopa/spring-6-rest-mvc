@@ -83,7 +83,7 @@ class BeerControllerIT {
     void testListBeers() {
         List<BeerDTO> dtos = beerController.listBeers();
 
-        assertThat(dtos).hasSize(3);
+        assertThat(dtos).hasSize(2413);
     }
 
     @Rollback
@@ -192,14 +192,14 @@ class BeerControllerIT {
         Beer beer = beerRepository.findAll().get(0);
 
         List<Beer> beerList = beerRepository.findAll();
-        assertThat(beerList).hasSize(3);
+        assertThat(beerList).hasSize(2413);
 
         ResponseEntity<Void> responseEntity = beerController.deleteBeerById(beer.getId());
 
         beerList = beerRepository.findAll();
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
-        assertThat(beerList).hasSize(2);
+        assertThat(beerList).hasSize(2412);
 
     }
 
