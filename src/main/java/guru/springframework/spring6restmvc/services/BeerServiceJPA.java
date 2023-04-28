@@ -22,24 +22,27 @@ public class BeerServiceJPA implements BeerService {
     private final BeerMapper mapper;
 
     @Override
-    public List<BeerDTO> listBeers(String beerName, String beerStyle) {
+    public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory) {
 
         List<Beer> beerList;
 
-        if (StringUtils.hasText(beerName) && StringUtils.hasText(beerStyle)) {
-            throw new IllegalArgumentException("Multiple request params not supported!");
-        }
-
-        if (StringUtils.hasText(beerName)) {
+        if (StringUtils.hasText(beerName) && beerStyle != null) {
+            beerList = beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%" + beerName + "%", beerStyle);
+        } else if (StringUtils.hasText(beerName)) {
             beerList = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
-        } else if (StringUtils.hasText(beerStyle)) {
-            beerList = beerRepository.findAllByBeerStyle(BeerStyle.valueOf(beerStyle));
+        } else if (beerStyle != null) {
+            beerList = beerRepository.findAllByBeerStyle(beerStyle);
         } else {
             beerList = beerRepository.findAll();
         }
-            return beerList.stream()
-                .map(mapper::beerToBeerDto)
-                .toList();
+
+        if (showInventory != null && !showInventory) {
+            beerList.forEach(beer -> beer.setQuantityOnHand(null));
+        }
+
+        return beerList.stream()
+            .map(mapper::beerToBeerDto)
+            .toList();
 
     }
 
