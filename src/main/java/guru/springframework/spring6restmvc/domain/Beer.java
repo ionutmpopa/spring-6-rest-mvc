@@ -15,6 +15,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -58,4 +59,8 @@ public class Beer {
 
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @OneToMany(mappedBy = "beer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<BeerOrderLine> beerOrderLineSet;
+
 }
