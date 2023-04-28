@@ -89,7 +89,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<BeerDTO> listBeers() {
+    public List<BeerDTO> listBeers(String beerName, String beerStyle) {
         return new ArrayList<>(beerMap.values());
     }
 
@@ -146,6 +146,7 @@ public class BeerServiceImpl implements BeerService {
         }
         return false;
     }
+
 }
 
 

@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
+import guru.springframework.spring6restmvc.controller.model.BeerStyle;
 import guru.springframework.spring6restmvc.domain.Beer;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.mapper.BeerMapper;
@@ -10,9 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Primary
@@ -23,10 +22,25 @@ public class BeerServiceJPA implements BeerService {
     private final BeerMapper mapper;
 
     @Override
-    public List<BeerDTO> listBeers() {
-        return beerRepository.findAll().stream()
-            .map(mapper::beerToBeerDto)
-            .toList();
+    public List<BeerDTO> listBeers(String beerName, String beerStyle) {
+
+        List<Beer> beerList;
+
+        if (StringUtils.hasText(beerName) && StringUtils.hasText(beerStyle)) {
+            throw new IllegalArgumentException("Multiple request params not supported!");
+        }
+
+        if (StringUtils.hasText(beerName)) {
+            beerList = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
+        } else if (StringUtils.hasText(beerStyle)) {
+            beerList = beerRepository.findAllByBeerStyle(BeerStyle.valueOf(beerStyle));
+        } else {
+            beerList = beerRepository.findAll();
+        }
+            return beerList.stream()
+                .map(mapper::beerToBeerDto)
+                .toList();
+
     }
 
     @Override
@@ -68,7 +82,7 @@ public class BeerServiceJPA implements BeerService {
     }
 
     @Override
-        public void patchBeerById(UUID beerId, BeerDTO beerDTO) {
+    public void patchBeerById(UUID beerId, BeerDTO beerDTO) {
         Optional<Beer> beer = beerRepository.findById(beerId);
 
         Beer beerToUpdate;

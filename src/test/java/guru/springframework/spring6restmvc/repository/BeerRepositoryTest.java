@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -21,6 +22,18 @@ class BeerRepositoryTest {
 
     @Autowired
     BeerRepository beerRepository;
+
+    @Test
+    void fetchBeerListByName() {
+        List<Beer> beerList = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%");
+        Assertions.assertThat(beerList).hasSize(336);
+    }
+
+    @Test
+    void fetchBeerListByStyle() {
+        List<Beer> beerList = beerRepository.findAllByBeerStyle(BeerStyle.valueOf("IPA"));
+        Assertions.assertThat(beerList).hasSize(548);
+    }
 
     @Test
     void saveBeer() {
