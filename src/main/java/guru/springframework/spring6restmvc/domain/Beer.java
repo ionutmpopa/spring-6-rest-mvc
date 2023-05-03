@@ -63,4 +63,10 @@ public class Beer {
     @OneToMany(mappedBy = "beer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<BeerOrderLine> beerOrderLineSet;
 
+    @ManyToMany
+    @JoinTable(name = "beer_category",
+        joinColumns = @JoinColumn(name = "beer_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories;
+
 }
