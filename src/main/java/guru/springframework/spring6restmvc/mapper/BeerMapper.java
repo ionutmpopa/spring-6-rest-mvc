@@ -1,7 +1,7 @@
 package guru.springframework.spring6restmvc.mapper;
 
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
-import guru.springframework.spring6restmvc.domain.Beer;
+import guru.springframework.spring6restmvc.entities.Beer;
 import org.mapstruct.Mapper;
 
 @Mapper

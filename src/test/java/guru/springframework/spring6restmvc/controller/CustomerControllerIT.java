@@ -2,7 +2,7 @@ package guru.springframework.spring6restmvc.controller;
 
 
 import guru.springframework.spring6restmvc.controller.model.CustomerDTO;
-import guru.springframework.spring6restmvc.domain.Customer;
+import guru.springframework.spring6restmvc.entities.Customer;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.repository.CustomerRepository;
 import org.assertj.core.api.Assertions;

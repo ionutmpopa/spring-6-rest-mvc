@@ -1,4 +1,4 @@
-package guru.springframework.spring6restmvc.domain;
+package guru.springframework.spring6restmvc.entities;
 
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
 import guru.springframework.spring6restmvc.controller.model.EnumValidator;

@@ -2,7 +2,7 @@ package guru.springframework.spring6restmvc.repository;
 
 import guru.springframework.spring6restmvc.bootstrap.BootstrapApp;
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
-import guru.springframework.spring6restmvc.domain.Beer;
+import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.services.BeerCsvServiceImpl;
 import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

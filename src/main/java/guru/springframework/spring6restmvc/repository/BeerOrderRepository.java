@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.repository;
 
-import guru.springframework.spring6restmvc.domain.BeerOrder;
+import guru.springframework.spring6restmvc.entities.BeerOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

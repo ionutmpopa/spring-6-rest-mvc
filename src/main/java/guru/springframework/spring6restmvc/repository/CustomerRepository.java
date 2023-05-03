@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.repository;
 
-import guru.springframework.spring6restmvc.domain.Customer;
+import guru.springframework.spring6restmvc.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

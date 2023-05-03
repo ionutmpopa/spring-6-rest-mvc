@@ -2,7 +2,7 @@ package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
-import guru.springframework.spring6restmvc.domain.Beer;
+import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.mapper.BeerMapper;
 import guru.springframework.spring6restmvc.repository.BeerRepository;

@@ -1,7 +1,7 @@
 package guru.springframework.spring6restmvc.repository;
 
-import guru.springframework.spring6restmvc.domain.Beer;
-import guru.springframework.spring6restmvc.domain.Category;
+import guru.springframework.spring6restmvc.entities.Beer;
+import guru.springframework.spring6restmvc.entities.Category;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

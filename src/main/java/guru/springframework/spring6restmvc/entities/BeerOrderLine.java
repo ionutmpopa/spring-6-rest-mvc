@@ -14,26 +14,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package guru.springframework.spring6restmvc.domain;
+package guru.springframework.spring6restmvc.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;
-import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Created by jt on 2019-01-26.
+ */
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Builder
-public class BeerOrder {
+public class BeerOrderLine {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -55,30 +55,16 @@ public class BeerOrder {
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private BeerOrder beerOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Beer beer;
+
     public boolean isNew() {
         return this.id == null;
     }
 
-    private String customerRef;
-
-    @ManyToOne
-    private Customer customer;
-
-    @OneToMany(mappedBy = "beerOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<BeerOrderLine> beerOrderLineSet;
-
-    public BeerOrder(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, String customerRef, Customer customer, Set<BeerOrderLine> beerOrderLineSet) {
-        this.id = id;
-        this.version = version;
-        this.createdDate = createdDate;
-        this.lastModifiedDate = lastModifiedDate;
-        this.customerRef = customerRef;
-        this.setCustomer(customer);
-        this.beerOrderLineSet = beerOrderLineSet;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-        customer.getBeerOrders().add(this);
-    }
+    private Integer orderQuantity = 0;
+    private Integer quantityAllocated = 0;
 }

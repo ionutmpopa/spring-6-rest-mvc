@@ -1,6 +1,7 @@
-package guru.springframework.spring6restmvc.domain;
+package guru.springframework.spring6restmvc.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -16,11 +17,11 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@Entity
+@Table(name = "customer")
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "category")
-public class Category {
+public class Customer {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -30,24 +31,21 @@ public class Category {
     private UUID id;
 
     @Version
-    private Long version;
+    private Integer version;
 
-    @Column
-    private String description;
+    @NotNull
+    private String customerName;
+
+    @Column(length = 255)
+    private String email;
 
     @CreationTimestamp
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    private LocalDateTime lastModifiedDate;
+    private LocalDateTime updatedDate;
 
     @Builder.Default
-    @ManyToMany
-    @JoinTable(name = "beer_category",
-        joinColumns = @JoinColumn(name = "category_id"),
-        inverseJoinColumns = @JoinColumn(name = "beer_id"))
-    private Set<Beer> beers = new HashSet<>();
-
-
-
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<BeerOrder> beerOrders = new HashSet<>();
 }

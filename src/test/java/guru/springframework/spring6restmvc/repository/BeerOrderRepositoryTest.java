@@ -1,13 +1,12 @@
 package guru.springframework.spring6restmvc.repository;
 
-import guru.springframework.spring6restmvc.domain.Beer;
-import guru.springframework.spring6restmvc.domain.BeerOrder;
-import guru.springframework.spring6restmvc.domain.Customer;
+import guru.springframework.spring6restmvc.entities.Beer;
+import guru.springframework.spring6restmvc.entities.BeerOrder;
+import guru.springframework.spring6restmvc.entities.Customer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
