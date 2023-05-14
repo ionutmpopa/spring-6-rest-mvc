@@ -36,7 +36,7 @@ public class BeerController {
         BeerDTO savedBeer = beerService.saveNewBeer(beer);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("location", API_V_1_BEER + "/" + savedBeer.getId().toString());
+        httpHeaders.add("Location", API_V_1_BEER + "/" + savedBeer.getId().toString());
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
     }
@@ -48,7 +48,7 @@ public class BeerController {
         BeerDTO updatedBeerDTO = beerService.updateBeerById(id, updatedBeer).orElseThrow(NotFoundException::new);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("location", API_V_1_BEER + "/" + updatedBeerDTO.getId().toString());
+        httpHeaders.add("Location", API_V_1_BEER + "/" + updatedBeerDTO.getId().toString());
 
         return ResponseEntity.ok().headers(httpHeaders).body(updatedBeerDTO);
     }
