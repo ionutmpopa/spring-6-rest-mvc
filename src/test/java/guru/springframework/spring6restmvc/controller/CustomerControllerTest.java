@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static guru.springframework.spring6restmvc.controller.BeerControllerTest.PASSWORD;
+import static guru.springframework.spring6restmvc.controller.BeerControllerTest.USER;
 import static guru.springframework.spring6restmvc.controller.CustomerController.API_V_1_CUSTOMER;
 import static guru.springframework.spring6restmvc.controller.CustomerController.CUSTOMER_PATH_ID;
 import static org.hamcrest.Matchers.is;
@@ -35,9 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CustomerController.class)
 @Import(WebSecurityConfig.class)
 class CustomerControllerTest {
-
-    private static final String USER = "user1";
-    private static final String PASSWORD = "password";
 
     @Autowired
     MockMvc mockMvc;

@@ -36,8 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(WebSecurityConfig.class)
 class BeerControllerTest {
 
-    private static final String USER = "user1";
-    private static final String PASSWORD = "password";
+    public static final String USER = "user1";
+    public static final String PASSWORD = "password";
 
     @Autowired
     MockMvc mockMvc;
