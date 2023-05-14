@@ -103,6 +103,15 @@ class BeerControllerTest {
     }
 
     @Test
+    void getBeerById_401Unauthorized() throws Exception {
+
+        given(beerService.getBeerById(any(UUID.class))).willThrow(NotFoundException.class);
+
+        mockMvc.perform(get(BEER_PATH_ID, UUID.randomUUID()))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void testUpdateBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().get(0);
         beer.setBeerName("Ciuc");

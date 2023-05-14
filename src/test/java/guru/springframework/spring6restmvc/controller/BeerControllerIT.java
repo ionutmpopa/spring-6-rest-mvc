@@ -73,6 +73,15 @@ class BeerControllerIT {
     }
 
     @Test
+    void testListBeersByStyle_401Unauthorized() throws Exception {
+
+        mockMvc.perform(get(BeerController.API_V_1_BEER)
+                .queryParam("beerStyle", "IPA")
+                .queryParam("pageSize", "1000"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void testListBeersByName() throws Exception {
 
         mockMvc.perform(get(BeerController.API_V_1_BEER)
