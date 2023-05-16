@@ -22,15 +22,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static guru.springframework.spring6restmvc.controller.BeerControllerTest.PASSWORD;
-import static guru.springframework.spring6restmvc.controller.BeerControllerTest.USER;
+import static guru.springframework.spring6restmvc.controller.BeerControllerIT.JWT_REQUEST_POST_PROCESSOR;
 import static guru.springframework.spring6restmvc.controller.CustomerController.API_V_1_CUSTOMER;
 import static guru.springframework.spring6restmvc.controller.CustomerController.CUSTOMER_PATH_ID;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -67,7 +65,7 @@ class CustomerControllerTest {
         doReturn(true).when(customerService).deleteById(customer.getId());
 
         mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getId())
-                .with(httpBasic(USER, PASSWORD)))
+                .with(JWT_REQUEST_POST_PROCESSOR))
             .andExpect(status().isAccepted());
 
         verify(customerService, times(1)).deleteById(uuidArgumentCaptor.capture());
@@ -84,7 +82,7 @@ class CustomerControllerTest {
         doReturn(true).when(customerService).patchCustomerById(customer.getId(), customer);
 
         mockMvc.perform(patch(CUSTOMER_PATH_ID, customer.getId())
-                .with(httpBasic(USER, PASSWORD))
+                .with(JWT_REQUEST_POST_PROCESSOR)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -102,7 +100,7 @@ class CustomerControllerTest {
         given(customerService.updateCustomer(customer.getId(), customer)).willReturn(Optional.of(customer));
 
         mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getId())
-                .with(httpBasic(USER, PASSWORD))
+                .with(JWT_REQUEST_POST_PROCESSOR)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -121,7 +119,7 @@ class CustomerControllerTest {
         given(customerService.saveCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.listCustomers().get(1));
 
         mockMvc.perform(post(API_V_1_CUSTOMER)
-                .with(httpBasic(USER, PASSWORD))
+                .with(JWT_REQUEST_POST_PROCESSOR)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -137,7 +135,7 @@ class CustomerControllerTest {
         given(customerService.listCustomers()).willReturn(customers);
 
         mockMvc.perform(get(API_V_1_CUSTOMER)
-                .with(httpBasic(USER, PASSWORD))
+                .with(JWT_REQUEST_POST_PROCESSOR)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -152,7 +150,7 @@ class CustomerControllerTest {
         given(customerService.getCustomer(customer.getId())).willReturn(Optional.of(customer));
 
         mockMvc.perform(get(CUSTOMER_PATH_ID, customer.getId())
-                .with(httpBasic(USER, PASSWORD))
+                .with(JWT_REQUEST_POST_PROCESSOR)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -166,7 +164,7 @@ class CustomerControllerTest {
         given(customerService.getCustomer(any(UUID.class))).willThrow(NotFoundException.class);
 
         mockMvc.perform(get(CUSTOMER_PATH_ID, UUID.randomUUID())
-                .with(httpBasic(USER, PASSWORD)))
+                .with(JWT_REQUEST_POST_PROCESSOR))
             .andExpect(status().isNotFound());
     }
 }
