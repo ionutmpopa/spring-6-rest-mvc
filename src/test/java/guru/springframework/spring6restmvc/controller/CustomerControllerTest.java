@@ -79,7 +79,8 @@ class CustomerControllerTest {
         CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
         customer.setCustomerName("Nimeni");
 
-        doReturn(true).when(customerService).patchCustomerById(customer.getId(), customer);
+        given(customerService.patchCustomerById(any(UUID.class), any(CustomerDTO.class)))
+            .willReturn(true);
 
         mockMvc.perform(patch(CUSTOMER_PATH_ID, customer.getId())
                 .with(JWT_REQUEST_POST_PROCESSOR)
@@ -87,7 +88,8 @@ class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
             .andExpect(status().isAccepted());
-        verify(customerService, times(1)).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
+        verify(customerService, times(1)).patchCustomerById(uuidArgumentCaptor.capture(),
+            customerArgumentCaptor.capture());
         Assertions.assertThat(customer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
         Assertions.assertThat(customer).isEqualTo(customerArgumentCaptor.getValue());
     }

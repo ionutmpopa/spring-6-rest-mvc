@@ -20,13 +20,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping(CustomerController.API_V_1_CUSTOMER)
 @RestController
-public class CustomerController {
+public class CustomerController implements CustomerControllerApi {
 
     public static final String API_V_1_CUSTOMER = "/api/v1/customer";
     public static final String CUSTOMER_PATH_ID = API_V_1_CUSTOMER + "/{customerId}";
 
     private final CustomerService customerService;
 
+    @Override
     @PostMapping
     public ResponseEntity<Void> addCustomer(@Valid @RequestBody CustomerDTO customer) {
         CustomerDTO savedCustomer = this.customerService.saveCustomer(customer);
@@ -35,6 +36,7 @@ public class CustomerController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
     }
 
+    @Override
     @PutMapping("/{customerId}")
     public ResponseEntity<CustomerDTO> updateCustomerById(@PathVariable("customerId") UUID id, @Valid @RequestBody CustomerDTO customer){
         log.debug("Update Customer by Id - in controller");
@@ -48,6 +50,7 @@ public class CustomerController {
 
     }
 
+    @Override
     @PatchMapping("/{customerId}")
     public ResponseEntity<Void> partiallyUpdateCustomerById(@PathVariable("customerId") UUID id, @Valid @RequestBody CustomerDTO customer){
         log.debug("Partially update Customer by Id - in controller");
@@ -57,16 +60,21 @@ public class CustomerController {
         throw new NotFoundException();
     }
 
+    @Override
     @GetMapping
-    public List<CustomerDTO> getCustomers() {
-        return this.customerService.listCustomers();
+    public ResponseEntity<List<CustomerDTO>> getCustomers() {
+        List<CustomerDTO> customerDTOList = this.customerService.listCustomers();
+        return ResponseEntity.ok(customerDTOList);
     }
 
+    @Override
     @GetMapping("/{customerId}")
-    public CustomerDTO getCustomerById(@PathVariable("customerId") UUID id) {
-        return this.customerService.getCustomer(id).orElseThrow(NotFoundException::new);
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable("customerId") UUID id) {
+        CustomerDTO customerDTO = this.customerService.getCustomer(id).orElseThrow(NotFoundException::new);
+        return ResponseEntity.ok(customerDTO);
     }
 
+    @Override
     @DeleteMapping("/{customerId}")
     public ResponseEntity<Void> deleteCustomerById(@PathVariable("customerId") UUID id) {
         if (this.customerService.deleteById(id)) {

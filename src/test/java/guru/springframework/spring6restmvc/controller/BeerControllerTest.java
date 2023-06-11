@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.config.WebSecurityConfig;
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
+import guru.springframework.spring6restmvc.controller.model.PageBeerDTO;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.services.BeerService;
 import guru.springframework.spring6restmvc.services.BeerServiceImpl;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -185,7 +185,7 @@ class BeerControllerTest {
     @Test
     void getAllBeers() throws Exception {
 
-        Page<BeerDTO> beers = beerServiceImpl.listBeers(null, null, false, 1, 25);
+        PageBeerDTO beers = beerServiceImpl.listBeers(null, null, false, 1, 25);
 
         when(beerService.listBeers(any(), any(), any(), any(), any())).thenReturn(beers);
 

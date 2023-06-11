@@ -35,7 +35,7 @@ class CustomerControllerIT {
 
         Customer customer = customerRepository.findAll().get(0);
 
-        CustomerDTO customerDTO = customerController.getCustomerById(customer.getId());
+        CustomerDTO customerDTO = customerController.getCustomerById(customer.getId()).getBody();
 
         Assertions.assertThat(customerDTO.getId()).isNotNull();
     }
@@ -47,7 +47,7 @@ class CustomerControllerIT {
 
     @Test
     void testListCustomers() {
-        List<CustomerDTO> dtos = customerController.getCustomers();
+        List<CustomerDTO> dtos = customerController.getCustomers().getBody();
 
         assertThat(dtos).hasSize(3);
     }
@@ -134,7 +134,7 @@ class CustomerControllerIT {
     @Test
     void testEmptyList() {
         customerRepository.deleteAll();
-        List<CustomerDTO> dtos = customerController.getCustomers();
+        List<CustomerDTO> dtos = customerController.getCustomers().getBody();
 
         assertThat(dtos).isEmpty();
     }

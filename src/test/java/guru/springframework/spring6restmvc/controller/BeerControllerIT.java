@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
+import guru.springframework.spring6restmvc.controller.model.PageBeerDTO;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.repository.BeerRepository;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -177,7 +177,7 @@ class BeerControllerIT {
     void getBeerById() {
         Beer beer = beerRepository.findAll().get(0);
 
-        BeerDTO beerDTO = beerController.getBeerById(beer.getId());
+        BeerDTO beerDTO = beerController.getBeerById(beer.getId()).getBody();
 
         Assertions.assertThat(beerDTO).isNotNull();
 
@@ -190,7 +190,8 @@ class BeerControllerIT {
 
     @Test
     void testListBeers() {
-        Page<BeerDTO> dtos = beerController.listBeers("", null, false, 1, 1000);
+        PageBeerDTO dtos = beerController.listBeers("", null,
+            false, 1, 1000).getBody();
 
         assertThat(dtos.getContent()).hasSize(1000);
     }
@@ -289,7 +290,8 @@ class BeerControllerIT {
     @Test
     void testEmptyList() {
         beerRepository.deleteAll();
-        Page<BeerDTO> dtos = beerController.listBeers("", null, false, 1, 25);
+        PageBeerDTO dtos = beerController.listBeers("", null, false,
+            1, 25).getBody();
 
         assertThat(dtos.getContent()).isEmpty();
     }

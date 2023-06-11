@@ -2,6 +2,7 @@ package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.controller.model.BeerDTO;
 import guru.springframework.spring6restmvc.controller.model.BeerStyle;
+import guru.springframework.spring6restmvc.controller.model.PageBeerDTO;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.exception.NotFoundException;
 import guru.springframework.spring6restmvc.mapper.BeerMapper;
@@ -29,7 +30,7 @@ public class BeerServiceJPA implements BeerService {
     private static final int DEFAULT_PAGE_SIZE = 25;
 
     @Override
-    public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize) {
+    public PageBeerDTO listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize) {
 
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
@@ -49,7 +50,7 @@ public class BeerServiceJPA implements BeerService {
             beerPage.forEach(beer -> beer.setQuantityOnHand(null));
         }
 
-        return beerPage.map(mapper::beerToBeerDto);
+        return mapper.pageBeerToPageBeerDTO(beerPage);
     }
 
     public PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
