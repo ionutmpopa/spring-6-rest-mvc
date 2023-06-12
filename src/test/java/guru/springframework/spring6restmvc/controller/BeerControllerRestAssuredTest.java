@@ -3,7 +3,6 @@ package guru.springframework.spring6restmvc.controller;
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
 import com.atlassian.oai.validator.whitelist.ValidationErrorsWhitelist;
-import groovy.xml.StreamingDOMBuilder;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
