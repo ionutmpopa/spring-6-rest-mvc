@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * @deprecated (not used anymore)
  */
-@Deprecated(forRemoval = true, since = "6/11/2023")
+@Deprecated(forRemoval = true, since = "06/11/2023")
 public interface DateConverter {
 
     @Named("mapCreatedToLocalDateTime")
