@@ -14,6 +14,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> {
                 authorize.requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll();
+                authorize.requestMatchers("/actuator/health/readiness", "/actuator/health/liveness").permitAll();
                 authorize
                     .anyRequest()
                     .authenticated();

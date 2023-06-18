@@ -12,10 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class BootstrapApp implements CommandLineRunner {
 
     @Transactional
     @Override
-    public void run(String... args) throws FileNotFoundException {
+    public void run(String... args) throws IOException {
 
         if (beerRepository.count() == 0) {
             loadBeers();
@@ -49,11 +47,12 @@ public class BootstrapApp implements CommandLineRunner {
 
     }
 
-    private void loadCsvData() throws FileNotFoundException {
+    private void loadCsvData() throws IOException {
 
-        File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
+        try (InputStream inputStream = getClass().getResourceAsStream("/csvdata/beers.csv");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
-        List<Beer> beerList = beerCsvService.convertCSV(file).stream()
+            List<Beer> beerList = beerCsvService.convertCSV(reader).stream()
                 .map(beerCSVRecord -> {
                     BeerStyle beerStyle = switch (beerCSVRecord.getStyle()) {
                         case "American Pale Lager" -> BeerStyle.LAGER;
@@ -76,8 +75,9 @@ public class BootstrapApp implements CommandLineRunner {
                         .quantityOnHand(beerCSVRecord.getCountX())
                         .build();
                 })
-                    .toList();
-        beerRepository.saveAllAndFlush(beerList);
+                .toList();
+            beerRepository.saveAllAndFlush(beerList);
+        }
     }
 
     private void loadCustomers() {

@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  auth-server:
+    image: spring-6-auth-server:latest
+    container_name: auth-server
+    ports:
+      - '9001:9000'
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql-db
+    environment:
+      MYSQL_DATABASE: restdb
+      MYSQL_USER: restadmin
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - '3307:3306'
+  spring-6-rest-mvc:
+    image: spring-6-rest-mvc:latest
+    container_name: spring-6-rest-mvc
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql-db
+      - auth-server
+    environment:
+      spring.datasource.url: 'jdbc:mysql://mysql-db:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC'
+      spring.datasource.username: 'restadmin'
+      spring.datasource.password: 'password'
+      spring.security.oauth2.resourceserver.jwt.issuer-uri: 'http://host.docker.internal:9001'
+#  my-flyway:
+#    container_name: my-flyway
+#    environment:
+#      - FLYWAY_USER=restadmin
+#      - FLYWAY_PASSWORD=password
+#      - FLYWAY_URL=jdbc:mysql://mysql-db:3307/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+#      - FLYWAY_SCHEMAS=flyway,restdb
+#      - FLYWAY_GROUP=true
+#    image: flyway/flyway:latest
+#    command: -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+#    volumes:
+#      - $PWD/sql_versions:/flyway/sql
+#    depends_on:
+#        - mysql-db
+#        - spring-6-rest-mvc
